@@ -1,0 +1,23 @@
+spec battery;
+
+const frameMass = 600;
+const batteryMass = 1300;
+const batteryEnergy = .15;
+
+def ft = stock{
+            numPropellers: 4,
+            propEff: uncertain(4.73, 2.5),
+            time: 0,
+        };
+
+def life = flow{
+    capacity: new ft,
+    charge: func{
+        x = batteryEnergy * batteryMass;
+        y = frameMass + batteryMass;
+        capacity.time <- (x / y) * (capacity.propEff * (y/capacity.numPropellers));
+    },
+};
+
+
+            

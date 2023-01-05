@@ -1,0 +1,33 @@
+spec orchestrator;
+
+def pool = stock{
+    instances: 0,
+    loading: 0,
+};
+
+def control = flow{
+    p: new pool,
+    add: func{
+        if p.loading > 0{
+            p.loading -> 1;
+            p.instances <- 1;
+        }
+    },
+    remove: func{
+        p.instances -> 1;
+    },
+    boot: func{
+        p.loading <- 1;
+    },
+};
+
+assert pool.instances > 0 eventually-always;
+
+for 3 run {
+    cluster = new control;
+    cluster.boot;
+    cluster.add;
+    if cluster.p.instances > 1{
+        cluster.remove;
+    }
+}

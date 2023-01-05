@@ -1,0 +1,73 @@
+system drone;
+
+import ("battery.fspec",
+        "position.fspec");
+
+global flight = new battery.life;
+global nav = new position.move;
+
+component propellers = states{
+    idle : func{
+        stay();
+    },
+    active: func {
+        stay() || advance(this.inFailure);
+    },
+    inFailure: func{
+        stay();
+    },
+};
+
+component sensor = states{
+    reporting: func{
+        stay() || advance(this.inFailure);
+    },
+    inFailure: func{
+        stay();
+    },
+};
+
+
+component drone = states{
+    flight: func{
+        advance(flightComputer.pathCheck);
+        if propellers.active{
+            nav.up;
+        }
+    },
+    ground: func{
+        if nav.pos.z == 0 {
+            stay();
+        }else{
+            nav.down;
+        }
+    },
+};
+
+component flightComputer = states{
+    healthCheck: func{
+        if sensor.reporting {
+            advance(propellers.active);
+        }
+        if !propellers.active || flight.capacity.time <= 1 {
+            advance(this.land);
+        }
+    },
+    pathCheck: func{
+        if sensor.reporting {
+            advance(drone.flight);
+        }else{
+            advance(this.land);
+        }
+
+    },
+    land: func{
+        advance(drone.ground);
+    },
+};
+
+start {
+    propellers: idle,
+    sensor: reporting,
+    flightComputer: healthCheck,
+};

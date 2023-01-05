@@ -1,0 +1,33 @@
+spec cache;
+
+def resources = stock{
+    blocks: 0, // Used blocks of memory 
+    table: 0, // Number of items in the table
+};
+
+def record = flow{
+    machine: new resources,
+    lookup: func{
+        machine.blocks <- 1;
+    },
+    release: func{
+        machine.blocks -> 1;
+    },
+    store: func{
+        machine.table <- 1;
+        machine.blocks <- 1;
+    },
+    expire: func{
+        machine.table -> 1;
+        machine.blocks <- 1;
+    },
+};
+
+assert resources.blocks < 4;
+assert resources.table <= 4;
+
+for 5 run {
+    r = new record;
+    r.store | r.release;
+};
+

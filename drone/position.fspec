@@ -1,0 +1,16 @@
+spec position;
+
+def altitude = stock{
+    z: 0,
+};
+
+def move = flow{
+    pos: new altitude,
+    e: unknown(),
+    up: func{
+        pos.z <- e;
+    },
+    down: func{
+        pos.z -> e;
+    },
+};
