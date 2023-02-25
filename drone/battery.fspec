@@ -19,5 +19,6 @@ def life = flow{
     },
 };
 
+assert ft.time >= 0;
 
             

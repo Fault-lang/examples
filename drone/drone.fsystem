@@ -66,6 +66,8 @@ component flightComputer = states{
     },
 };
 
+assert when propellers.inFailure then !drone.flight;
+
 start {
     propellers: idle,
     sensor: reporting,

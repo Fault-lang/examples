@@ -14,3 +14,5 @@ def move = flow{
         pos.z -> e;
     },
 };
+
+assert altitude.z >= 0;
