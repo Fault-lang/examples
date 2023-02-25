@@ -1,0 +1,21 @@
+spec insects;
+
+def population = stock{
+    alive:100,
+    resistance:0,
+};
+
+def growth =  flow{
+    p: new population,
+    x: unknown(),
+    r: unknown(),
+    death: func{
+        if p.resistance < 90 {
+            p.alive -> x;
+            p.resistance <- r;
+        }
+    },
+    birth: func{
+        p.alive <- x;
+    },
+};

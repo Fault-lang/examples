@@ -1,0 +1,54 @@
+system pests;
+
+import ("insects.fspec",
+        "crops.fspec");
+
+global grain = new crops.production;
+global weevils = new insects.growth;
+       weevils.p.alive = 20;
+global goodBugs = new insects.growth;
+
+component pesticide = states{
+    idle : func{
+        weevils.birth;
+        goodBugs.birth;
+
+        if grain.c.sellable < 50 {
+            advance(this.apply);
+        }
+    },
+    apply: func{
+        weevils.birth | weevils.death;
+        goodBugs.birth | goodBugs.death;
+
+        if grain.c.sellable >= 50 {
+            advance(this.idle);
+        }
+    },
+};
+
+component farm = states{
+    profit: func{
+        grain.grow;
+
+        if weevils.p.alive > 60{
+            advance(this.loss);
+        }
+    },
+    loss: func{
+        grain.infestation;
+
+        if weevils.p.alive <= 60 {
+            advance(this.profit);
+        }
+    },
+};
+
+start {
+    farm: profit,
+    pesticide: idle,
+};
+
+for 5 run {
+    grain.grow;
+};

@@ -1,0 +1,18 @@
+spec crops;
+
+def harvest = stock{
+    sellable: 100,
+    lost: 0,
+};
+
+def production = flow{
+    c: new harvest,
+    x: unknown(),
+    grow: func{
+        c.sellable <- x;
+    },
+    infestation: func{
+        c.sellable -> x;
+        c.lost <- x;
+    },
+};
