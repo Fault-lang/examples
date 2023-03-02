@@ -14,7 +14,7 @@ component replCache = states{
     },
     lookupRecord: func{
         record.lookup;
-            advance(this.returnRecord) || advance(this.createRecord);
+        advance(this.returnRecord) || advance(this.createRecord);
     },
     returnRecord: func{
         record.release;
