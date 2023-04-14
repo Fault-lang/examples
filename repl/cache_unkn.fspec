@@ -29,8 +29,9 @@ def record = flow{
 assert resources.blocks < memory;
 assert resources.table <= table;
 
-for 5 run {
+for 5 init{
     r = new record;
+} run {
     r.store | r.release;
 };
 

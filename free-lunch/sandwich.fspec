@@ -23,8 +23,9 @@ def lunch = flow{
 
 assert supplies.ham >= 0;
 
-for 5 run {
+for 5 init{
     day = new lunch;
+}run {
     day.prep;
     day.service;
 }

@@ -23,8 +23,9 @@ def control = flow{
 
 assert pool.instances > 0 eventually-always;
 
-for 3 run {
+for 3 init{
     cluster = new control;
+}run {
     cluster.boot;
     cluster.add;
     if cluster.p.instances > 1{
